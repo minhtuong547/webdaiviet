@@ -1,5 +1,17 @@
 # Phase 2B — security, live QA, and backup status
 
+## Phase 2C — CI repair and Navbar handoff preparation
+
+Updated 2026-10-20. Status: `PHASE2C_PARTIAL` pending a successful GitHub Actions run and browser QA.
+
+- CI root cause: `npx --yes secretlint "**/*"` had no repository config, so Secretlint stopped with `secretlint config is not found` before the production audit. Added `.secretlintrc.json` using `@secretlint/secretlint-rule-preset-recommend` and pinned `secretlint` plus its preset to `13.0.7` in `package.json`/lockfile. CI invokes the lockfile-installed `npm run secretlint`; `.secretlintignore` excludes Git metadata, dependencies, Next output, coverage, and build artifacts. A synthetic Slack-token-shaped fixture was rejected by Secretlint; fixture contents were not emitted.
+- Local isolated validation from a clean source archive: `npm ci`, Secretlint, lint, typecheck, 7/7 tests, production build, and `npm audit --omit=dev` all passed. The build emits an existing Autoprefixer warning for `end` alignment. Root-worktree `npm ci` could not replace a locked SWC binary (EPERM); no process was stopped. Validation therefore used a separate temporary clean copy, not the Navbar worktree.
+- Production audit remains 0 vulnerabilities. Full audit remains 5 high findings, all GHSA-vfj7-8cjw-p6xm (`braces <=3.0.3`) via `eslint-config-next -> @next/eslint-plugin-next -> fast-glob -> micromatch -> braces`; the only npm-suggested remediation downgrades `eslint-config-next` to 14.2.35 as a major change. No downgrade/force fix was applied. Restricting lint tooling to trusted CI inputs limits exposure but does not remove the advisory.
+- Live API contracts are unchanged: IslePilot server and players are 200 with public-field filtering; leaderboard/events/killfeed remain `MISSING_SCOPE` (403); Steam auth remains disabled (`CONTRACT_PENDING`). No mock data or bypass was introduced.
+- Browser QA remains `PENDING`: no supported in-app browser automation runtime is available in this session. Manual checklist: launch fresh production output; at 1920/1440/430/390 px verify layout, nav, no horizontal overflow; directly navigate/refresh `/`; inspect console for hydration/runtime errors and Network for CSS/JS and API state responses; confirm player/server data and explicit missing-scope/disabled states. HTTP/API checks do not count as visual or hydration QA.
+- Navbar work remains protected and unintegrated. Preserve `src/components/navigation/*`, `src/app/navbar-preview/*`, and all untracked Navbar artifacts. Integration readiness checklist: obtain explicit component/CSS handoff and preview QA; review component dependencies and responsive/accessibility behavior; compare the incoming diff; agree an isolated commit/checkpoint; only then integrate into the root layout and rerun full responsive/browser QA. Do not stage or commit the parallel work as part of Phase 2C.
+- GitHub Actions result and commit SHA: pending publication and an actual run result. No production-ready claim is made.
+
 Updated 2026-10-20. Status: `PHASE2B_PARTIAL`. Credentials, Steam IDs, and player values are intentionally omitted.
 
 ## Root cause and runtime verification
