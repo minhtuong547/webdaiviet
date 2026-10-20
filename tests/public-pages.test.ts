@@ -55,10 +55,21 @@ test("home page contains no placeholder href links", () => {
   assert.equal(source.includes('href="#"'), false);
 });
 
-test("homepage presents online players and max slots as distinct server fields", () => {
+test("homepage keeps the cinematic background, live data, and unavailable actions honest", () => {
   const source = readFileSync(new URL("../src/app/page.tsx", import.meta.url), "utf8");
+  const heroStyles = readFileSync(new URL("../src/components/home/HomePage.module.css", import.meta.url), "utf8");
+  assert.match(source, /dai-viet-forest-hero\.jpg/);
+  assert.equal(source.includes("dai-viet-survival-scene.svg"), false);
+  assert.match(source, /disabled title="Launcher chưa được cấu hình URL tải"/);
+  assert.match(source, /disabled title="Steam authentication chưa được xác minh"/);
+  assert.match(source, /disabled title="Discord chưa được cấu hình URL chính thức"/);
   assert.match(source, /PLAYERS ONLINE/);
   assert.match(source, /MAX SLOTS/);
-  assert.match(source, /maxSlots === null/);
+  assert.match(source, /maxSlots !== null/);
+  assert.match(source, /homeFeatures\.slice\(0, 6\)/);
+  assert.match(source, /homeFeatures\.slice\(6\)/);
+  assert.match(source, /publicReadStateText\[server\.state\]/);
+  assert.match(heroStyles, /min-height:clamp\(620px/);
+  assert.equal(heroStyles.includes("dai-viet-survival-scene.svg"), false);
   assert.equal(source.includes("SỨC CHỨA HIỆN TẠI"), false);
 });
