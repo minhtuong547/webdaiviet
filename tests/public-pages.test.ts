@@ -54,3 +54,11 @@ test("home page contains no placeholder href links", () => {
   const source = readFileSync(new URL("../src/app/page.tsx", import.meta.url), "utf8");
   assert.equal(source.includes('href="#"'), false);
 });
+
+test("homepage presents online players and max slots as distinct server fields", () => {
+  const source = readFileSync(new URL("../src/app/page.tsx", import.meta.url), "utf8");
+  assert.match(source, /PLAYERS ONLINE/);
+  assert.match(source, /MAX SLOTS/);
+  assert.match(source, /maxSlots === null/);
+  assert.equal(source.includes("SỨC CHỨA HIỆN TẠI"), false);
+});
