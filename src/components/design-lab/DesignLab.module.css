@@ -1,0 +1,528 @@
+.page {
+  min-height: 100vh;
+  background: #0b0f0d;
+  color: #f3eee7;
+  font-family: Arial, sans-serif;
+}
+.labHeader {
+  position: fixed;
+  z-index: 8;
+  top: 18px;
+  left: 18px;
+  display: flex;
+  max-width: min(100% - 36px, 760px);
+  align-items: center;
+  gap: 13px;
+  border-left: 1px solid rgba(255, 189, 189, 0.65);
+  padding-left: 12px;
+  color: #d8cec5;
+  font-size: 10px;
+  line-height: 1.35;
+}
+.labHeader span {
+  color: #ffbdbd;
+  font-weight: 800;
+}
+.labHeader strong {
+  font-size: 10px;
+}
+.labHeader p {
+  margin: 0;
+  color: #a89f98;
+}
+.lostHero,
+.islandHero {
+  position: relative;
+  display: grid;
+  min-height: 790px;
+  overflow: hidden;
+  isolation: isolate;
+}
+.lostHero > img,
+.islandHero > img {
+  z-index: -3;
+  object-fit: cover;
+}
+.lostVeil {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at 70% 36%,
+      rgba(255, 189, 189, 0.18),
+      transparent 18%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(5, 10, 8, 0.94),
+      rgba(5, 10, 8, 0.53) 42%,
+      rgba(5, 10, 8, 0.14)
+    ),
+    linear-gradient(0deg, #0b0f0d, transparent 46%);
+}
+.lostMark {
+  position: absolute;
+  top: 18%;
+  right: 12%;
+  width: min(42vw, 540px);
+  color: rgba(255, 189, 189, 0.28);
+  filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.35));
+  transform: rotate(-8deg);
+}
+.lostCopy {
+  align-self: center;
+  width: min(100% - 80px, 600px);
+  margin-left: max(40px, calc((100vw - 1240px) / 2));
+  padding-top: 70px;
+}
+.lostCopy p,
+.archiveCopy p,
+.islandTitle p {
+  margin: 0 0 16px;
+  color: #ffbdbd;
+  font-size: 11px;
+  font-weight: 800;
+}
+.lostCopy h1 {
+  max-width: 500px;
+  margin: 0;
+  color: #fff8f1;
+  font-size: clamp(64px, 7vw, 116px);
+  line-height: 0.85;
+}
+.lostCopy strong {
+  display: block;
+  max-width: 390px;
+  margin: 28px 0 13px;
+  color: #ffbdbd;
+  font-size: 23px;
+  line-height: 1.15;
+}
+.lostCopy span {
+  display: block;
+  max-width: 430px;
+  color: #d8d3cd;
+  font-size: 15px;
+  line-height: 1.65;
+}
+.lostHorizon {
+  position: absolute;
+  right: 7%;
+  bottom: 52px;
+  left: 7%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #e6dcd4;
+  font-size: 10px;
+  font-weight: 800;
+}
+.lostHorizon i {
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(90deg, #ffbdbd, transparent);
+}
+.lostTrail {
+  padding: 130px max(40px, calc((100vw - 1240px) / 2));
+  background: #0b0f0d;
+}
+.labEyebrow {
+  margin: 0;
+  color: #ffbdbd;
+  font-size: 10px;
+  font-weight: 800;
+}
+.lostTrail h2,
+.archiveNotes h2,
+.signalIntro h2 {
+  max-width: 650px;
+  margin: 17px 0 65px;
+  font-size: 48px;
+  line-height: 1.04;
+}
+.lostTrail ol {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+  list-style: none;
+}
+.lostTrail li {
+  min-height: 230px;
+  padding: 28px 28px 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.18);
+}
+.lostTrail li:first-child {
+  border-left: 1px solid rgba(255, 255, 255, 0.18);
+}
+.lostTrail li span {
+  color: #ffbdbd;
+  font-size: 11px;
+  font-weight: 800;
+}
+.lostTrail li strong {
+  display: block;
+  margin-top: 70px;
+  font-size: 23px;
+}
+.lostTrail li p {
+  max-width: 260px;
+  color: #b9b6af;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.archiveHero {
+  position: relative;
+  display: grid;
+  min-height: 780px;
+  overflow: hidden;
+  background: linear-gradient(128deg, #ded0b8, #ab9a7f 53%, #72634f);
+  color: #2b2924;
+  isolation: isolate;
+}
+.archiveHero::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  opacity: 0.34;
+  background-image:
+    repeating-linear-gradient(
+      96deg,
+      transparent 0 28px,
+      rgba(57, 47, 35, 0.12) 29px 30px
+    ),
+    radial-gradient(
+      circle at 70% 20%,
+      rgba(255, 255, 255, 0.6),
+      transparent 26%
+    );
+  content: "";
+}
+.archiveMasthead {
+  display: flex;
+  align-self: start;
+  justify-content: space-between;
+  padding: 31px 42px;
+  border-bottom: 1px solid rgba(43, 41, 36, 0.45);
+  font-size: 10px;
+  font-weight: 800;
+}
+.archiveMark {
+  position: absolute;
+  top: 16%;
+  right: 11%;
+  width: min(44vw, 570px);
+  color: rgba(62, 47, 35, 0.5);
+  transform: rotate(7deg);
+}
+.archiveCopy {
+  align-self: center;
+  width: min(100% - 80px, 640px);
+  margin-left: max(40px, calc((100vw - 1240px) / 2));
+  padding-top: 90px;
+}
+.archiveCopy p {
+  color: #954d56;
+}
+.archiveCopy h1 {
+  margin: 0;
+  font-family: Georgia, serif;
+  font-size: clamp(68px, 8vw, 128px);
+  font-weight: 400;
+  line-height: 0.84;
+}
+.archiveCopy span {
+  display: block;
+  max-width: 400px;
+  margin-top: 26px;
+  font-size: 16px;
+  line-height: 1.7;
+}
+.archiveStamp {
+  position: absolute;
+  right: 8%;
+  bottom: 58px;
+  display: grid;
+  width: 118px;
+  height: 118px;
+  place-content: center;
+  gap: 6px;
+  border: 1px solid rgba(43, 41, 36, 0.55);
+  border-radius: 50%;
+  text-align: center;
+  transform: rotate(-10deg);
+}
+.archiveStamp span {
+  font-size: 9px;
+  font-weight: 800;
+}
+.archiveStamp i {
+  font-family: Georgia, serif;
+  font-size: 24px;
+}
+.archiveNotes {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);
+  gap: 70px;
+  padding: 120px max(40px, calc((100vw - 1240px) / 2));
+  background: #e4d8c1;
+  color: #292821;
+}
+.archiveNotes h2 {
+  margin-bottom: 0;
+  font-family: Georgia, serif;
+}
+.archiveNotes ol {
+  margin: 0;
+  border-top: 1px solid rgba(41, 40, 33, 0.38);
+  padding: 0;
+  list-style: none;
+}
+.archiveNotes li {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 20px;
+  padding: 22px 0;
+  border-bottom: 1px solid rgba(41, 40, 33, 0.28);
+}
+.archiveNotes li span {
+  color: #955059;
+  font-size: 10px;
+  font-weight: 800;
+}
+.archiveNotes li strong {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  font-weight: 400;
+}
+.archiveNotes li p {
+  grid-column: 2;
+  margin: 0;
+  color: #5e594f;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.islandHero {
+  min-height: 790px;
+}
+.islandShade {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at 66% 45%,
+      rgba(255, 189, 189, 0.12),
+      transparent 18%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(6, 13, 10, 0.92),
+      rgba(6, 13, 10, 0.46) 42%,
+      rgba(6, 13, 10, 0.22)
+    ),
+    linear-gradient(0deg, #09100d, transparent 43%);
+}
+.islandTitle {
+  align-self: center;
+  width: min(100% - 80px, 650px);
+  margin-left: max(40px, calc((100vw - 1240px) / 2));
+  padding-top: 85px;
+}
+.islandTitle h1 {
+  margin: 0;
+  color: #f7f0e9;
+  font-size: clamp(82px, 10vw, 150px);
+  line-height: 0.73;
+}
+.islandTitle h1 em {
+  color: #ffbdbd;
+  font-family: Georgia, serif;
+  font-size: 0.79em;
+  font-weight: 400;
+}
+.islandTitle span {
+  display: block;
+  max-width: 315px;
+  margin-top: 37px;
+  color: #ded7cf;
+  font-size: 17px;
+  line-height: 1.55;
+}
+.islandMark {
+  position: absolute;
+  right: max(7vw, 48px);
+  bottom: 56px;
+  width: min(34vw, 420px);
+  color: #ffbdbd;
+  filter: drop-shadow(0 20px 32px rgba(0, 0, 0, 0.32));
+  transform: rotate(-6deg);
+}
+.islandRoute {
+  position: absolute;
+  top: 142px;
+  right: max(7vw, 48px);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #e8ded7;
+  font-size: 10px;
+  font-weight: 800;
+}
+.islandRoute svg:first-child {
+  color: #ffbdbd;
+}
+.islandSignals {
+  display: grid;
+  grid-template-columns: 1.12fr 0.88fr;
+  gap: 80px;
+  align-items: end;
+  padding: 128px max(40px, calc((100vw - 1240px) / 2));
+  background: #09100d;
+}
+.signalIntro h2 {
+  margin-bottom: 0;
+}
+.signalWriting {
+  min-height: 245px;
+  padding: 28px 0;
+  border-top: 1px solid rgba(255, 189, 189, 0.48);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+.signalWriting span {
+  color: #ffbdbd;
+  font-size: 10px;
+  font-weight: 800;
+}
+.signalWriting p {
+  max-width: 370px;
+  margin: 57px 0 20px;
+  color: #ded8d0;
+  font-size: 18px;
+  line-height: 1.48;
+}
+.signalWriting svg {
+  color: #ffbdbd;
+}
+@media (max-width: 760px) {
+  .labHeader {
+    top: 14px;
+    left: 14px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 9px;
+  }
+  .labHeader p {
+    max-width: 260px;
+  }
+  .lostHero,
+  .islandHero,
+  .archiveHero {
+    min-height: 690px;
+  }
+  .lostCopy,
+  .archiveCopy,
+  .islandTitle {
+    width: calc(100% - 40px);
+    margin-left: 20px;
+  }
+  .lostCopy h1 {
+    font-size: 66px;
+  }
+  .lostCopy strong {
+    margin-top: 23px;
+    font-size: 20px;
+  }
+  .lostMark {
+    top: 20%;
+    right: -15%;
+    width: 360px;
+  }
+  .lostHorizon {
+    right: 20px;
+    bottom: 28px;
+    left: 20px;
+    font-size: 8px;
+  }
+  .lostTrail,
+  .archiveNotes,
+  .islandSignals {
+    padding: 76px 20px;
+  }
+  .lostTrail h2,
+  .archiveNotes h2,
+  .signalIntro h2 {
+    margin: 13px 0 40px;
+    font-size: 33px;
+  }
+  .lostTrail ol {
+    display: block;
+  }
+  .lostTrail li {
+    min-height: auto;
+    padding: 20px 0 32px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  .lostTrail li:first-child {
+    border-left: 0;
+  }
+  .lostTrail li strong {
+    margin-top: 29px;
+    font-size: 21px;
+  }
+  .archiveMasthead {
+    padding: 21px 20px;
+    font-size: 8px;
+  }
+  .archiveMark {
+    top: 25%;
+    right: -18%;
+    width: 350px;
+  }
+  .archiveCopy h1 {
+    font-size: 76px;
+  }
+  .archiveStamp {
+    right: 20px;
+    bottom: 28px;
+    width: 91px;
+    height: 91px;
+  }
+  .archiveNotes,
+  .islandSignals {
+    grid-template-columns: 1fr;
+    gap: 43px;
+  }
+  .archiveNotes li {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .archiveNotes li p {
+    grid-column: 1;
+  }
+  .islandTitle h1 {
+    font-size: 84px;
+  }
+  .islandMark {
+    right: -36px;
+    bottom: 31px;
+    width: 245px;
+  }
+  .islandRoute {
+    top: auto;
+    right: 20px;
+    bottom: 32px;
+    left: 20px;
+  }
+  .islandRoute svg:last-child {
+    margin-left: auto;
+  }
+  .signalWriting p {
+    margin-top: 42px;
+    font-size: 16px;
+  }
+}

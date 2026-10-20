@@ -1,8 +1,12 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 import { navigationConfig } from "../src/components/navigation/navigation.config";
-import { mapPublicPlayersResult, mapPublicServerResult, publicReadStateText } from "../src/lib/api/public-community-data";
+import {
+  mapPublicPlayersResult,
+  mapPublicServerResult,
+  publicReadStateText,
+} from "../src/lib/api/public-community-data";
 import type { IslePilotResult } from "../src/lib/api/islepilot-client";
 
 test("public page mappers expose only the existing safe server and player fields", () => {
@@ -10,13 +14,29 @@ test("public page mappers expose only the existing safe server and player fields
     ok: true,
     status: 200,
     requestId: "test-server",
-    data: { name: "DAI VIET", playersOnline: 8, maxPlayers: 80, steamId: "76561198000000000", wallet: 9000 },
+    data: {
+      name: "DAI VIET",
+      playersOnline: 8,
+      maxPlayers: 80,
+      steamId: "76561198000000000",
+      wallet: 9000,
+    },
   };
   const playersResult: IslePilotResult<unknown> = {
     ok: true,
     status: 200,
     requestId: "test-players",
-    data: { players: [{ name: "Player", species: "Tyrannosaurus", online: true, discordId: "private", bans: ["private"] }] },
+    data: {
+      players: [
+        {
+          name: "Player",
+          species: "Tyrannosaurus",
+          online: true,
+          discordId: "private",
+          bans: ["private"],
+        },
+      ],
+    },
   };
 
   assert.deepEqual(mapPublicServerResult(serverResult), {
@@ -25,60 +45,123 @@ test("public page mappers expose only the existing safe server and player fields
   });
   assert.deepEqual(mapPublicPlayersResult(playersResult), {
     state: "LIVE_VERIFIED",
-    data: { count: 1, players: [{ name: "Player", species: "Tyrannosaurus", online: true }] },
+    data: {
+      count: 1,
+      players: [{ name: "Player", species: "Tyrannosaurus", online: true }],
+    },
   });
 });
 
 test("public page mappers preserve verified upstream failures without replacement data", () => {
-  const result: IslePilotResult<unknown> = { ok: false, code: "MISSING_SCOPE", status: 403, requestId: "test-scope" };
-  assert.deepEqual(mapPublicServerResult(result), { state: "MISSING_SCOPE", data: null });
+  const result: IslePilotResult<unknown> = {
+    ok: false,
+    code: "MISSING_SCOPE",
+    status: 403,
+    requestId: "test-scope",
+  };
+  assert.deepEqual(mapPublicServerResult(result), {
+    state: "MISSING_SCOPE",
+    data: null,
+  });
   assert.equal(publicReadStateText.MISSING_SCOPE, "API key thiếu quyền đọc");
 });
 
 test("navbar keeps standalone public pages out of primary navigation", () => {
-  const enabled = [navigationConfig.home, ...navigationConfig.destinations].filter((destination) => destination.available);
-  assert.deepEqual(enabled.map((destination) => [destination.id, destination.href]), [
-    ["home", "/"],
-  ]);
-  for (const destination of navigationConfig.destinations.filter((destination) => !destination.available)) {
+  const enabled = [
+    navigationConfig.home,
+    ...navigationConfig.destinations,
+  ].filter((destination) => destination.available);
+  assert.deepEqual(
+    enabled.map((destination) => [destination.id, destination.href]),
+    [["home", "/"]],
+  );
+  for (const destination of navigationConfig.destinations.filter(
+    (destination) => !destination.available,
+  )) {
     assert.equal(destination.href, null, destination.id);
   }
   for (const menu of navigationConfig.menus) {
-    for (const destination of menu.items) assert.equal(destination.available, false, destination.id);
+    for (const destination of menu.items)
+      assert.equal(destination.available, false, destination.id);
   }
   assert.equal(navigationConfig.launcher.available, false);
   assert.equal(navigationConfig.launcher.href, null);
 });
 
 test("home page contains no placeholder href links", () => {
-  const source = readFileSync(new URL("../src/app/page.tsx", import.meta.url), "utf8");
+  const source = readFileSync(
+    new URL("../src/app/page.tsx", import.meta.url),
+    "utf8",
+  );
   assert.equal(source.includes('href="#"'), false);
 });
 
-test("homepage keeps the cinematic background, live data, and unavailable actions honest", () => {
-  const source = readFileSync(new URL("../src/app/page.tsx", import.meta.url), "utf8");
-  const heroStyles = readFileSync(new URL("../src/components/home/HomePage.module.css", import.meta.url), "utf8");
-  const showcaseSource = readFileSync(new URL("../src/components/home/EcosystemShowcase.tsx", import.meta.url), "utf8");
+test("homepage keeps the cinematic background, real data, and unavailable features honest", () => {
+  const source = readFileSync(
+    new URL("../src/app/page.tsx", import.meta.url),
+    "utf8",
+  );
+  const heroStyles = readFileSync(
+    new URL("../src/components/home/HomePage.module.css", import.meta.url),
+    "utf8",
+  );
+  const markSource = readFileSync(
+    new URL("../src/components/brand/PrehistoricMark.tsx", import.meta.url),
+    "utf8",
+  );
   assert.match(source, /dai-viet-forest-hero\.jpg/);
   assert.equal(source.includes("dai-viet-survival-scene.svg"), false);
-  assert.match(source, /disabled title="Launcher chưa được cấu hình URL tải"/);
-  assert.match(source, /disabled title="Steam authentication chưa được xác minh"/);
-  assert.match(source, /disabled title="Discord chưa được cấu hình URL chính thức"/);
-  assert.match(source, /PLAYERS ONLINE/);
-  assert.match(source, /MAX SLOTS/);
+  assert.match(source, /href="\/may-chu"/);
+  assert.equal(source.includes("<button"), false);
   assert.match(source, /maxSlots !== null/);
-  assert.match(source, /homeFeatures\.slice\(0, 6\)/);
-  assert.match(source, /homeFeatures\.slice\(6\)/);
+  assert.match(
+    source,
+    /visiblePlayers = players\.data\?\.players\.slice\(0, 7\)/,
+  );
   assert.match(source, /publicReadStateText\[server\.state\]/);
-  assert.match(source, /serverUnavailable/);
-  assert.match(source, /EcosystemShowcase/);
-  assert.match(heroStyles, /min-height:\s*clamp\(620px/);
-  assert.match(heroStyles, /grid-template-columns:\s*repeat\(12/);
-  assert.match(heroStyles, /featureGarageDino/);
-  assert.match(heroStyles, /serverValuePending/);
-  assert.match(showcaseSource, /useState/);
-  assert.match(showcaseSource, /role="tablist"/);
-  assert.equal(showcaseSource.includes("href="), false);
+  assert.match(source, /publicReadStateText\[players\.state\]/);
+  assert.match(source, /futureTrails\.map/);
+  assert.match(source, /PrehistoricMark/);
+  assert.match(heroStyles, /\.heroMark/);
+  assert.match(heroStyles, /\.callSignField/);
+  assert.match(heroStyles, /\.trailList/);
+  assert.equal(heroStyles.includes("featureGrid"), false);
+  assert.equal(heroStyles.includes("EcosystemShowcase"), false);
   assert.equal(heroStyles.includes("dai-viet-survival-scene.svg"), false);
-  assert.equal(source.includes("SỨC CHỨA HIỆN TẠI"), false);
+  assert.match(markSource, /original DAI VIET claw-island insignia/);
+});
+
+test("signature design lab routes remain private previews", () => {
+  const navbarSource = readFileSync(
+    new URL("../src/components/navigation/DaiVietNavbar.tsx", import.meta.url),
+    "utf8",
+  );
+  const labSource = readFileSync(
+    new URL("../src/components/design-lab/DesignLab.tsx", import.meta.url),
+    "utf8",
+  );
+  assert.equal(navbarSource.includes("design-lab"), false);
+  assert.equal(
+    existsSync(
+      new URL("../src/app/design-lab/lost-world/page.tsx", import.meta.url),
+    ),
+    true,
+  );
+  assert.equal(
+    existsSync(
+      new URL(
+        "../src/app/design-lab/survival-archive/page.tsx",
+        import.meta.url,
+      ),
+    ),
+    true,
+  );
+  assert.equal(
+    existsSync(
+      new URL("../src/app/design-lab/the-island/page.tsx", import.meta.url),
+    ),
+    true,
+  );
+  assert.match(labSource, /data-design-lab/);
+  assert.match(labSource, /dai-viet-forest-hero\.jpg/);
 });
