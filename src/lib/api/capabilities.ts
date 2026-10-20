@@ -1,0 +1,2 @@
+export type CapabilityState="LIVE_VERIFIED"|"NOT_CONFIGURED"|"MISSING_SCOPE"|"ENTITLEMENT_UNAVAILABLE"|"CONTRACT_PENDING";
+export const capabilities={officialReads:"NOT_CONFIGURED" as CapabilityState,portalReads:"CONTRACT_PENDING" as CapabilityState,steamLogin:"NOT_CONFIGURED" as CapabilityState,writeOperations:"NOT_CONFIGURED" as CapabilityState,skinEditor3d:"CONTRACT_PENDING" as CapabilityState} as const;

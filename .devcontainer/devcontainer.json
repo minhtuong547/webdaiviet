@@ -1,0 +1,1 @@
+{"name":"Dai Viet Web","image":"mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm","forwardPorts":[3000],"portsAttributes":{"3000":{"label":"Dai Viet web","onAutoForward":"openBrowser"}},"postCreateCommand":"npm install","customizations":{"vscode":{"extensions":["dbaeumer.vscode-eslint","bradlc.vscode-tailwindcss"]}}}
