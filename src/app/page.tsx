@@ -1,30 +1,80 @@
-import { Activity, ArrowUpRight, Compass, Crown, Gamepad2, Shield, Users } from "lucide-react";
-import { getLeaderboard, getPlayers, getServer } from "@/lib/api/islepilot-endpoints";
-import { parseServerSnapshot, publicPlayersSummary } from "@/lib/api/islepilot-schemas";
+import Link from "next/link";
+import { Activity, ArrowUpRight, CircleDot, Radio, ShieldCheck, Users } from "lucide-react";
+import { getPublicCommunityData, publicReadStateText } from "@/lib/api/public-community-data";
 
-const stateText: Record<string, string> = {
-  NOT_CONFIGURED: "Chưa cấu hình API key",
-  UNAUTHORIZED: "API key không được chấp nhận",
-  MISSING_SCOPE: "API key thiếu quyền đọc",
-  ENTITLEMENT_UNAVAILABLE: "Tính năng chưa có trong gói IslePilot",
-  RATE_LIMITED: "Đang giới hạn yêu cầu; thử lại sau",
-  UPSTREAM_UNAVAILABLE: "Không kết nối được IslePilot",
-  INVALID_RESPONSE: "Phản hồi IslePilot chưa đúng định dạng",
-  NOT_FOUND: "Endpoint chưa được cung cấp",
-};
-
-async function getDashboardData() {
-  const [serverResult, playersResult, leaderboardResult] = await Promise.all([getServer(), getPlayers(), getLeaderboard()]);
-  const server = serverResult.ok ? parseServerSnapshot(serverResult.data) : null;
-  const players = playersResult.ok ? publicPlayersSummary(playersResult.data) : null;
-  const leaders = leaderboardResult.ok ? leaderboardResult.data : null;
-  return { serverResult, playersResult, leaderboardResult, server: server?.success ? server.data : null, players, leaders };
+function formatTime(value: string | null | undefined) {
+  if (!value) return "Đang chờ tín hiệu mới";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "Mốc thời gian chưa hợp lệ" : date.toLocaleTimeString("vi-VN");
 }
 
+export const revalidate = 30;
+
 export default async function Home() {
-  const { serverResult, playersResult, leaderboardResult, server, players, leaders } = await getDashboardData();
-  const serverState = serverResult.ok ? (server ? "OK" : "INVALID_RESPONSE") : serverResult.code;
-  const leaderboardState = leaderboardResult.ok ? "OK" : leaderboardResult.code;
-  const leaderCount = Array.isArray(leaders) ? leaders.length : (leaders && typeof leaders === "object" && Array.isArray((leaders as {leaderboard?:unknown[]}).leaderboard) ? (leaders as {leaderboard:unknown[]}).leaderboard.length : null);
-  return <main><section className="hero"><div className="eyebrow"><span className="dot"/> CỘNG ĐỒNG THE ISLE EVRIMA</div><h1>Tiếng gọi<br/>của <em>hoang dã.</em></h1><p>Một thế giới sinh tồn, nơi mỗi dấu chân kể nên câu chuyện. Sống cùng bầy đàn Đại Việt.</p><div className="actions"><a className="primary" href="#server">Khám phá máy chủ <ArrowUpRight size={16}/></a><a className="secondary" href="#community">Tham gia cộng đồng</a></div><div className="hero-art"><div className="sun"/><div className="ridge ridge-a"/><div className="ridge ridge-b"/><div className="ridge ridge-c"/><div className="hero-caption">VÙNG ĐẤT CỦA NHỮNG KẺ SỐNG SÓT <span>01 / 04</span></div></div></section><section className="stats" id="server"><div className="stat-head"><div><span className="kicker">TRỰC TIẾP TỪ ĐẢO</span><h2>Thế giới vẫn đang sống.</h2></div><span className="status"><Activity size={15}/> {serverState === "OK" ? "DỮ LIỆU ISLEPILOT ĐÃ XÁC MINH" : stateText[serverState]}</span></div><div className="stat-grid"><article><span><Users/> Người chơi</span><strong>{server?.online ?? "—"}</strong><small>{server?.lastSeenAt ? `Cập nhật ${new Date(server.lastSeenAt).toLocaleTimeString("vi-VN")}` : stateText[serverState]}</small></article><article><span><Gamepad2/> Máy chủ</span><strong>{server ? "Đang phản hồi" : "—"}</strong><small>{server?.name ?? stateText[serverState]}</small></article><article><span><Crown/> Bảng xếp hạng</span><strong>{leaderCount ?? "—"}</strong><small>{leaderboardState === "OK" ? "Bản ghi nhận từ API IslePilot" : stateText[leaderboardState]}</small></article><article><span><Shield/> Trạng thái tích hợp</span><strong>{serverState === "OK" ? "Đã xác minh" : "Chưa xác minh"}</strong><small>{serverState === "OK" ? "HTTP 200 và schema hợp lệ" : "Không hiển thị dữ liệu mô phỏng"}</small></article></div></section><section className="players" id="players"><div className="stat-head"><div><span className="kicker">NGƯỜI CHƠI ĐANG TRỰC TUYẾN</span><h2>Những người đang trên đảo.</h2></div><span className="status"><Users size={15}/> {playersResult.ok ? `${players?.count ?? 0} NGƯỜI` : stateText[playersResult.code]}</span></div>{playersResult.ok && players ? <div className="player-grid">{players.players.map((player,index)=><article key={`${player.name}-${index}`}><strong>{player.name ?? "Người chơi"}</strong><small>{player.species ?? "Đang sinh tồn"}</small></article>)}</div> : <p className="empty-state">{playersResult.ok ? "Dữ liệu người chơi chưa đúng định dạng." : stateText[playersResult.code]}</p>}</section><section className="lower" id="community"><div><span className="kicker">LÃNH THỔ CỦA CHÚNG TA</span><h2>Chọn hành trình<br/>của bạn.</h2></div><div className="tiles"><a href="#"><Compass/><b>Bản đồ đảo</b><small>Khám phá các khu vực</small><ArrowUpRight/></a><a href="#"><Crown/><b>Người dẫn đầu</b><small>{leaderCount === null ? stateText[leaderboardState] : `${leaderCount} bản ghi thật từ IslePilot`}</small><ArrowUpRight/></a></div></section><footer>ĐẠI VIỆT <span>THE ISLE EVRIMA · CỘNG ĐỒNG VIỆT NAM</span></footer></main>
+  const { server, players } = await getPublicCommunityData();
+  const online = server.data?.online ?? null;
+  const capacity = online === null ? "—" : server.data?.maxPlayers ? `${online} / ${server.data.maxPlayers}` : String(online);
+  const visiblePlayers = players.data?.players.slice(0, 6) ?? [];
+
+  return (
+    <main className="home" data-home-page="true">
+      <section className="homeHero">
+        <div className="homeContainer homeHeroGrid">
+          <div className="homeHeroCopy">
+            <p className="homeEyebrow">ĐẠI VIỆT · THE ISLE EVRIMA</p>
+            <h1 className="homeTitle">Nơi bản năng<br />gặp <em>bầy đàn.</em></h1>
+            <p className="homeLead">Một không gian cộng đồng được xây quanh những phiên sinh tồn thật, dữ liệu trực tiếp có kiểm soát và những người vẫn đang trên đảo.</p>
+            <div className="homeActions">
+              <Link className="homeActionPrimary" href="/may-chu" data-home-action="server">Khám phá máy chủ <ArrowUpRight aria-hidden="true" size={16} /></Link>
+              <Link className="homeActionSecondary" href="/nguoi-choi" data-home-action="players">Gặp những người trên đảo</Link>
+            </div>
+            <dl className="homeHeroMetrics" aria-label="Tóm tắt cộng đồng">
+              <div><dt>Máy chủ</dt><dd>{server.data?.name ?? "Chưa xác minh"}</dd></div>
+              <div><dt>Người đang online</dt><dd>{players.data?.count ?? "—"}</dd></div>
+              <div><dt>Lần cập nhật</dt><dd>{formatTime(server.data?.lastSeenAt)}</dd></div>
+            </dl>
+          </div>
+
+          <aside className="homeLivePanel" aria-label="Tình trạng trực tiếp">
+            <div className="homeLiveHeader"><span className="homePanelLabel">TÍN HIỆU TRỰC TIẾP</span><span className="homeState" data-state={server.state}><Activity aria-hidden="true" size={14} />{publicReadStateText[server.state]}</span></div>
+            <div className="homeLiveValue"><span>SỨC CHỨA HIỆN TẠI</span><strong>{capacity}</strong><small>{server.data?.maxPlayers ? "Người chơi / giới hạn" : "Người chơi được máy chủ báo cáo"}</small></div>
+            <div className="homeLiveDivider" />
+            <div className="homeLiveFooter"><span><CircleDot aria-hidden="true" size={15} />Danh sách công khai</span><strong>{players.data?.count ?? "—"} online</strong></div>
+          </aside>
+        </div>
+      </section>
+
+      <section className="homeSignal" aria-labelledby="home-signal-title">
+        <div className="homeContainer">
+          <div className="homeSectionHeading"><div><p className="homeEyebrow">DÒNG CHẢY CỘNG ĐỒNG</p><h2 id="home-signal-title">Tình trạng, không phải phỏng đoán.</h2></div><p>Chỉ các trường dữ liệu công khai đã xác minh được hiển thị ở đây. Khi nguồn không sẵn sàng, trạng thái thực được giữ nguyên.</p></div>
+          <div className="homeSignalGrid">
+            <article className="homeSignalCard"><div className="homeCardIcon"><Radio aria-hidden="true" size={19} /></div><span>Máy chủ</span><strong>{server.data?.name ?? "Chưa xác minh tên máy chủ"}</strong><small>{publicReadStateText[server.state]}</small></article>
+            <article className="homeSignalCard"><div className="homeCardIcon homeCardIconMint"><Users aria-hidden="true" size={19} /></div><span>Người chơi</span><strong>{players.data?.count ?? "—"} trực tuyến</strong><small>{publicReadStateText[players.state]}</small></article>
+            <article className="homeSignalCard"><div className="homeCardIcon"><ShieldCheck aria-hidden="true" size={19} /></div><span>Quyền riêng tư</span><strong>Dữ liệu đã lọc</strong><small>Không Steam ID, Discord ID, ví hay dữ liệu quản trị.</small></article>
+          </div>
+        </div>
+      </section>
+
+      <section className="homeRoster" aria-labelledby="home-roster-title">
+        <div className="homeContainer">
+          <div className="homeSectionHeading"><div><p className="homeEyebrow">TRÊN ĐẢO LÚC NÀY</p><h2 id="home-roster-title">Những dấu chân đang tiếp tục.</h2></div><Link href="/nguoi-choi" className="homeTextLink">Xem toàn bộ danh sách <ArrowUpRight aria-hidden="true" size={15} /></Link></div>
+          {players.data ? (
+            visiblePlayers.length ? <ul className="homePlayerGrid" aria-label={`${players.data.count} người chơi trực tuyến`}>{visiblePlayers.map((player, index) => <li key={`${player.name ?? "unknown"}-${index}`}><span><CircleDot aria-hidden="true" size={14} />Online</span><strong>{player.name ?? "Người chơi chưa đặt tên"}</strong><small>{player.species ?? "Chưa có thông tin loài"}</small></li>)}</ul>
+              : <div className="homeEmpty"><strong>Đảo đang yên lặng.</strong><p>Nguồn dữ liệu đang hoạt động nhưng chưa ghi nhận người chơi online tại thời điểm cập nhật.</p></div>
+          ) : <div className="homeEmpty"><strong>Danh sách chưa thể tải.</strong><p>{publicReadStateText[players.state]}. Không có người chơi mẫu được thay thế vào giao diện.</p></div>}
+        </div>
+      </section>
+
+      <section className="homePaths" aria-labelledby="home-paths-title">
+        <div className="homeContainer"><div className="homeSectionHeading"><div><p className="homeEyebrow">LỐI ĐI CÔNG KHAI</p><h2 id="home-paths-title">Đi sâu hơn khi bạn cần.</h2></div></div>
+          <div className="homePathGrid">
+            <Link href="/may-chu" className="homePath"><span className="homePathNumber">01</span><div><strong>Trạng thái máy chủ</strong><small>Xem tín hiệu trực tiếp, sức chứa và thời điểm cập nhật.</small></div><ArrowUpRight aria-hidden="true" size={20} /></Link>
+            <Link href="/nguoi-choi" className="homePath"><span className="homePathNumber">02</span><div><strong>Người chơi trực tuyến</strong><small>Xem danh sách công khai gồm tên và loài đang online.</small></div><ArrowUpRight aria-hidden="true" size={20} /></Link>
+          </div>
+        </div>
+      </section>
+
+      <footer className="homeFooter"><div className="homeContainer"><strong>ĐẠI VIỆT</strong><span>THE ISLE EVRIMA · CỘNG ĐỒNG VIỆT NAM</span><span>Dữ liệu công khai, chỉ đọc</span></div></footer>
+    </main>
+  );
 }
