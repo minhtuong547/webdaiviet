@@ -128,6 +128,11 @@ token values are documented above. Differences are intentional and recorded:
   production-authenticated comparison: the repository has neither a verified
   Steam issuer nor an authorized player-data contract.
 
-Git commit and push state is recorded after the final clean validation. This
-phase remains `PARTIAL` while the approved Player frames, verified Steam auth,
-asset rights, and full frame-level visual comparisons are unresolved.
+## Git publication
+
+- Implementation commit: `8b84732` (`feat(home): implement phase 6 portal foundation`).
+- Target branch: `feature/phase2-live-api`; no force push, deployment, or
+  merge to `main` was performed.
+
+This phase remains `PARTIAL` while the approved Player frames, verified Steam
+auth, asset rights, and full frame-level visual comparisons are unresolved.
