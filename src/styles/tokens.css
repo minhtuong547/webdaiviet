@@ -1,0 +1,60 @@
+:root {
+  --dv-color-primary: #ffbdbd;
+  --dv-color-primary-hover: #ffd6d9;
+  --dv-color-primary-muted: #c78d9d;
+  --dv-color-background: #0c0a10;
+  --dv-color-surface: #17141c;
+  --dv-color-surface-elevated: #211c26;
+  --dv-color-surface-soft: #1b1721;
+  --dv-color-text: #f8f6f8;
+  --dv-color-text-secondary: #aaa3b0;
+  --dv-color-text-supporting: #b6afb8;
+  --dv-color-text-disabled: #868590;
+  --dv-color-border: #39313f;
+  --dv-color-border-subtle: rgba(255, 255, 255, 0.09);
+  --dv-color-online: #b9d7bf;
+  --dv-color-warning: #f2cd94;
+  --dv-color-danger: #ef9f9f;
+
+  --dv-font-sans: "Inter", "Be Vietnam Pro", system-ui, sans-serif;
+  --dv-font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --dv-font-display: "Be Vietnam Pro", "Inter", system-ui, sans-serif;
+
+  --dv-text-xs: 9px;
+  --dv-text-sm: 11px;
+  --dv-text-md: 14px;
+  --dv-text-lg: 18px;
+  --dv-text-xl: 24px;
+  --dv-text-display: 36px;
+
+  --dv-space-1: 4px;
+  --dv-space-2: 6px;
+  --dv-space-3: 10px;
+  --dv-space-4: 12px;
+  --dv-space-5: 14px;
+  --dv-space-6: 16px;
+  --dv-space-8: 24px;
+  --dv-space-10: 28px;
+  --dv-space-12: 36px;
+  --dv-space-16: 48px;
+  --dv-space-18: 64px;
+  --dv-space-20: 72px;
+
+  --dv-radius-sm: 10px;
+  --dv-radius-md: 12px;
+  --dv-radius-lg: 14px;
+  --dv-radius-xl: 18px;
+
+  --dv-shadow-card: 0 18px 46px rgba(0, 0, 0, 0.23);
+  --dv-shadow-action: 0 12px 28px rgba(255, 189, 189, 0.16);
+  --dv-focus-ring: 0 0 0 3px rgba(255, 189, 189, 0.34);
+
+  --dv-container: 1180px;
+  --dv-nav-height: 78px;
+  --dv-ticker-height: 44px;
+  --dv-z-nav: 50;
+  --dv-z-overlay: 100;
+  --dv-motion-fast: 160ms;
+  --dv-motion-base: 220ms;
+  --dv-motion-slow: 360ms;
+}

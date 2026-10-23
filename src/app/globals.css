@@ -1,8 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap');
-
-:root{--bg:#090b11;--surface:#141821;--surface-strong:#1b202b;--pink:#ffbdbd;--text:#f8f7f8;--muted:#a9aab5;--line:#30313b}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);font-family:'Be Vietnam Pro',sans-serif}
-a{color:inherit;text-decoration:none}
-button,input,textarea,select{font:inherit}
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap");
+@import "../styles/tokens.css";
+@import "../styles/theme.css";
+@import "../styles/utilities.css";

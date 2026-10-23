@@ -1,0 +1,12 @@
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--dv-font-mono);
+  font-size: var(--dv-text-xs);
+  white-space: nowrap;
+}
+
+.online { color: var(--dv-color-online); }
+.warning { color: var(--dv-color-warning); }
+.unavailable { color: var(--dv-color-text-disabled); }

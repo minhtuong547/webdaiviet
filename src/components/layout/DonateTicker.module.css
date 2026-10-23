@@ -1,0 +1,11 @@
+.ticker { height: var(--dv-ticker-height); border-bottom: 1px solid var(--dv-color-border-subtle); background: #110e16; color: var(--dv-color-text-supporting); }
+.inner { width: min(calc(100% - 48px), var(--dv-container)); height: 100%; display: grid; grid-template-columns: auto minmax(0, 1fr) 28px; align-items: center; gap: var(--dv-space-6); margin: 0 auto; }
+.label { display: inline-flex; align-items: center; gap: 7px; color: var(--dv-color-primary); font-family: var(--dv-font-mono); font-size: var(--dv-text-xs); letter-spacing: .08em; white-space: nowrap; }
+.viewport { min-width: 0; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+.track { display: flex; width: max-content; gap: 120px; animation: ticker-roll 26s linear infinite; color: var(--dv-color-text-secondary); font-size: var(--dv-text-sm); white-space: nowrap; }
+.track[data-paused="true"] { animation-play-state: paused; }
+.pause { display: grid; width: 28px; height: 28px; place-items: center; border: 1px solid var(--dv-color-border); border-radius: var(--dv-radius-sm); background: transparent; color: var(--dv-color-text-secondary); cursor: pointer; }
+.pause:hover { border-color: rgba(255, 189, 189, .48); color: var(--dv-color-primary); }
+@keyframes ticker-roll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (max-width: 640px) { .inner { width: calc(100% - 32px); grid-template-columns: auto minmax(0, 1fr) 28px; gap: var(--dv-space-3); } .label { font-size: 8px; } .track { font-size: 10px; } }
+@media (prefers-reduced-motion: reduce) { .track { animation: none; } }

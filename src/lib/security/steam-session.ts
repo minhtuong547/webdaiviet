@@ -3,7 +3,8 @@ import { z } from "zod";
 
 const sessionSchema=z.object({steamId:z.string().regex(/^\d{17}$/),expiresAt:z.number().int().positive()});
 export const STEAM_SESSION_COOKIE="dv_session";
-function secret(){const value=process.env.SESSION_SECRET;if(!value||value.length<32)throw new Error("Session signing secret is not configured");return value;}
+export function hasValidSessionSecret(value:string|undefined=process.env.SESSION_SECRET):value is string{return typeof value==="string"&&value.length>=32;}
+function secret():string{const value=process.env.SESSION_SECRET;if(!hasValidSessionSecret(value))throw new Error("Session signing secret is not configured");return value;}
 export function signSession(payload:{steamId:string;expiresAt:number}){
   const parsed=sessionSchema.parse(payload), body=Buffer.from(JSON.stringify(parsed)).toString("base64url");
   const sig=createHmac("sha256",secret()).update(body).digest("base64url");return `${body}.${sig}`;
